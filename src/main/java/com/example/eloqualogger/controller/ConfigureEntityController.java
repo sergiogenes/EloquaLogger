@@ -27,8 +27,8 @@ public class ConfigureEntityController {
 
     @GetMapping()
     @ResponseBody
-    public String getForm() {
-        return service.getConfigForm();
+    public String getForm(@RequestParam Map<String, Object> queryStrings) {
+        return service.getConfigForm(queryStrings);
     }
 
     @GetMapping("/get_all")

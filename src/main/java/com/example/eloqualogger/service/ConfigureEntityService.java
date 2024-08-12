@@ -24,7 +24,7 @@ public class ConfigureEntityService {
         return repository.findAll();
     }
 
-    public String getConfigForm() {
+    public String getConfigForm(Map<String, Object> queryStrings) {
         return "<!DOCTYPE html>" +
                 "<html lang='en'>" +
                 "<head>" +
@@ -44,16 +44,16 @@ public class ConfigureEntityService {
                 "<body>" +
                 "<h2>Configure Entity Form</h2>" +
                 "<form action='https://facturacionteco-amcuhphjh0bbaeha.eastus-01.azurewebsites.net/api/configure_entities" +
-                "?instance_id={InstanceId}" +
-                "&install_id={InstallId}" +
-                "&user_name={UserName}" +
-                "&user_id={UserId}" +
-                "&site_name={SiteName}" +
-                "&site_id={SiteId}" +
-                "&app_id={AppId}" +
-                "&asset_id={AssetId}" +
-                "&asset_type={AssetType}" +
-                "&asset_name={AssetName}'" +
+                "?instance_id="+ queryStrings.get("instance_id") +
+                "&install_id=" + queryStrings.get("install_id") +
+                "&user_name=" + queryStrings.get("user_name") +
+                "&user_id=" + queryStrings.get("user_id") +
+                "&site_name=" + queryStrings.get("site_name") +
+                "&site_id=" + queryStrings.get("site_id") +
+                "&app_id=" + queryStrings.get("app_id") +
+                "&asset_id=" + queryStrings.get("asset_id") +
+                "&asset_type=" + queryStrings.get("asset_type") +
+                "&asset_name=" + queryStrings.get("asset_name") +
                 " method='post'>" +
                 "<label for='name'>Nombre:</label>" +
                 "<input type='text' id='name' name='name'>" +
