@@ -20,14 +20,14 @@ public class ConfigureEntityController {
     private ConfigureEntityService service;
 
     @PostMapping()
-    public ResponseEntity<String> createConfigureEntity(
+    public ConfigureEntity createConfigureEntity(
             @RequestParam Map<String, String> queryStrings,
             @RequestBody Map<String, Object> body) {
 
         Map<String, Object> newConfigureEntity = new HashMap<>();
         newConfigureEntity.put("body", body);
         newConfigureEntity.put("queryStrings",  queryStrings);
-        service.createConfigureEntity(newConfigureEntity);
+
 
         // Extrae el id_instance del query string
         String idInstance = queryStrings.get("id_instance");
@@ -55,10 +55,10 @@ public class ConfigureEntityController {
 
         // Realiza la solicitud PUT
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.PUT, requestEntity, String.class);
+        restTemplate.exchange(url, HttpMethod.PUT, requestEntity, String.class);
 
         // Devuelve la respuesta de la solicitud PUT
-        return response;
+        return service.createConfigureEntity(newConfigureEntity);
     }
 
     @GetMapping()
