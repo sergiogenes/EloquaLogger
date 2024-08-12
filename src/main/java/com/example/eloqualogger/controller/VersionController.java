@@ -14,7 +14,7 @@ public class VersionController {
     @GetMapping
     public Map<String, Object> getVersion(){
         Map<String, Object> version = new HashMap<>();
-        version.put("version", "0.8 - Se modifica formulario de configuración para enviar información en un Json en el body y se modifica metodo post para recibir dicho body");
+        version.put("version", "0.9 - Se agrega repuesta PUT desde la solicitud POST del configureEntityController");
         return  version;
     }
 
