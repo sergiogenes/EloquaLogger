@@ -14,7 +14,7 @@ public class VersionController {
     @GetMapping
     public Map<String, Object> getVersion(){
         Map<String, Object> version = new HashMap<>();
-        version.put("version", "0.5 - Se agregan queryStrings a pedido post del formulario de configuración");
+        version.put("version", "0.6 - Se agregan queryStrings a pedido post del formulario de configuración");
         return  version;
     }
 
