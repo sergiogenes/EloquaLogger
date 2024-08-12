@@ -43,8 +43,20 @@ public class ConfigureEntityService {
                 "</head>" +
                 "<body>" +
                 "<h2>Configure Entity Form</h2>" +
-                "<form action='https://facturacionteco-amcuhphjh0bbaeha.eastus-01.azurewebsites.net/api/configure_entities" +
-                "?instance_id="+ queryStrings.get("instance_id") +
+                "<form id='configForm'>" +
+                "<label for='name'>Nombre:</label>" +
+                "<input type='text' id='name' name='name'>" +
+                "<button type='submit'>Enviar</button>" +
+                "</form>" +
+
+                "<script>" +
+                "document.getElementById('configForm').addEventListener('submit', function(event) {" +
+                "    event.preventDefault();" +  // Previene el comportamiento por defecto del formulario
+                "    const formData = new FormData(event.target);" +
+                "    const jsonData = JSON.stringify(Object.fromEntries(formData));" +  // Serializa a JSON
+                //"    fetch('https://facturacionteco-amcuhphjh0bbaeha.eastus-01.azurewebsites.net/api/configure_entities" +
+                "    fetch('http://localhost:8080/api/configure_entities" +
+                "?instance_id=" + queryStrings.get("instance_id") +
                 "&install_id=" + queryStrings.get("install_id") +
                 "&user_name=" + queryStrings.get("user_name") +
                 "&user_id=" + queryStrings.get("user_id") +
@@ -53,13 +65,20 @@ public class ConfigureEntityService {
                 "&app_id=" + queryStrings.get("app_id") +
                 "&asset_id=" + queryStrings.get("asset_id") +
                 "&asset_type=" + queryStrings.get("asset_type") +
-                "&asset_name=" + queryStrings.get("asset_name") +
-                " method='post'>" +
-                "<label for='name'>Nombre:</label>" +
-                "<input type='text' id='name' name='name'>" +
-                "<button type='submit'>Enviar</button>" +
-                "</form>" +
+                "&asset_name=" + queryStrings.get("asset_name") + "', {" +
+                "        method: 'POST'," +
+                "        headers: {" +
+                "            'Content-Type': 'application/json'" +
+                "        }," +
+                "        body: jsonData" +  // Envía los datos como JSON
+                "    }).then(response => response.json())" +
+                "      .then(data => console.log(data));" +
+                "});" +
+                "</script>" +
+
                 "</body>" +
                 "</html>";
     }
+
+
 }

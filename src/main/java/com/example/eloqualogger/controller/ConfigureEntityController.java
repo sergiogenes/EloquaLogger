@@ -16,11 +16,11 @@ public class ConfigureEntityController {
     @Autowired
     private ConfigureEntityService service;
 
-    @PostMapping(consumes = "application/x-www-form-urlencoded")
-    public ConfigureEntity createConfigureEntity(@RequestParam Map<String, String> formData, @RequestParam Map<String, Object> queryStrings){
+    @PostMapping()
+    public ConfigureEntity createConfigureEntity(@RequestParam Map<String, Object> queryStrings, @RequestBody Map<String, Object> body){
 
         Map<String, Object> newConfigureEntity = new HashMap<>();
-        newConfigureEntity.put("formData", formData);
+        newConfigureEntity.put("body", body);
         newConfigureEntity.put("queryStrings",  queryStrings);
         return service.createConfigureEntity(newConfigureEntity);
     }
