@@ -54,8 +54,8 @@ public class ConfigureEntityService {
                 "    event.preventDefault();" +  // Previene el comportamiento por defecto del formulario
                 "    const formData = new FormData(event.target);" +
                 "    const jsonData = JSON.stringify(Object.fromEntries(formData));" +  // Serializa a JSON
-                //"    fetch('https://facturacionteco-amcuhphjh0bbaeha.eastus-01.azurewebsites.net/api/configure_entities" +
-                "    fetch('http://localhost:8080/api/configure_entities" +
+                "    fetch('https://facturacionteco-amcuhphjh0bbaeha.eastus-01.azurewebsites.net/api/configure_entities" +
+                //"    fetch('http://localhost:8080/api/configure_entities" +
                 "?instance_id=" + queryStrings.get("instance_id") +
                 "&install_id=" + queryStrings.get("install_id") +
                 "&user_name=" + queryStrings.get("user_name") +
