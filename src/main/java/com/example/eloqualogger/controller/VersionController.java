@@ -10,11 +10,11 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/version")
 public class VersionController {
-
+    
     @GetMapping
     public Map<String, Object> getVersion(){
         Map<String, Object> version = new HashMap<>();
-        version.put("version", "0.1");
+        version.put("version", "0.26 - Delete endpoint " );
         return  version;
     }
 
