@@ -3,6 +3,7 @@ package com.example.eloqualogger.controller;
 import com.example.eloqualogger.model.NotificationEntity;
 import com.example.eloqualogger.service.NotificationEntityService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -17,13 +18,16 @@ public class NotificationEntityController {
     private NotificationEntityService service;
 
     @PostMapping
-    public NotificationEntity createNotificationEntity(@RequestParam Map<String, Object> queryStrings, @RequestBody Map<String, Object> body){
+    public ResponseEntity<String> createNotificationEntity(@RequestParam Map<String, Object> queryStrings, @RequestBody Map<String, Object> body){
 
         Map<String, Object> newNotificationEntity = new HashMap<>();
 
         newNotificationEntity.put("queryStrings", queryStrings);
         newNotificationEntity.put("body", body);
-        return service.createNotificationEntity(newNotificationEntity);
+        service.createNotificationEntity(newNotificationEntity);
+
+        String htmlResponse = "<tr><td><a href=\"www.google.com\">Sergio.Milla</a></td><td>77860</td><td>$ 10.000.000</td></tr>";
+        return ResponseEntity.ok(htmlResponse);
     }
 
     @GetMapping

@@ -3,6 +3,7 @@ package com.example.eloqualogger.service;
 import com.example.eloqualogger.model.NotificationEntity;
 import com.example.eloqualogger.repository.NotificationEntityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,5 +22,10 @@ public class NotificationEntityService {
 
     public List<NotificationEntity> getAllNotificationEntities(){
         return repository.findAll();
+    }
+
+    @Async
+    public void processEloquaRequest (Map<String, Object> newNotificationEntity){
+
     }
 }

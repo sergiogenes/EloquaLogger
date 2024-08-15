@@ -14,7 +14,7 @@ public class VersionController {
     @GetMapping
     public Map<String, Object> getVersion(){
         Map<String, Object> version = new HashMap<>();
-        version.put("version", "0.26 - Delete endpoint " );
+        version.put("version", "0.28 - Respondiendo en tr completo " );
         return  version;
     }
 
