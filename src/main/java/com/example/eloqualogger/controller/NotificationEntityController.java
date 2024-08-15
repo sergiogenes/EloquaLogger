@@ -18,7 +18,7 @@ public class NotificationEntityController {
     private NotificationEntityService service;
 
     @PostMapping
-    public ResponseEntity<String> createNotificationEntity(@RequestParam Map<String, Object> queryStrings, @RequestBody Map<String, Object> body){
+    public ResponseEntity<Void> createNotificationEntity(@RequestParam Map<String, Object> queryStrings, @RequestBody Map<String, Object> body){
 
         Map<String, Object> newNotificationEntity = new HashMap<>();
 
@@ -26,8 +26,14 @@ public class NotificationEntityController {
         newNotificationEntity.put("body", body);
         service.createNotificationEntity(newNotificationEntity);
 
-        String htmlResponse = "<tr><td><a href=\"www.google.com\">Sergio.Milla</a></td><td>77860</td><td>$ 10.000.000</td></tr>";
-        return ResponseEntity.ok(htmlResponse);
+        // Envío del información sin personalizar contenido
+        //String htmlResponse = "<tr><td><a href=\"www.google.com\">Sergio.Milla</a></td><td>77860</td><td>$ 10.000.000</td></tr>";
+        //return ResponseEntity.ok(htmlResponse);
+
+        service.processEloquaRequest(newNotificationEntity);
+
+        return ResponseEntity.noContent().build();
+
     }
 
     @GetMapping
