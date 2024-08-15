@@ -29,6 +29,7 @@ public class CreateEntityController {
         Map<String, Object> response = new HashMap<>();
         Map<String, String> recordDefinition = new HashMap<>();
         recordDefinition.put("ContactID", "{{Contact.Id}}");
+        //recordDefinition.put("EmailAddress", "{{Contact.Field(C_EmailAddress)}}");
 
         response.put("recordDefinition", recordDefinition);
         response.put("height", 256);

@@ -26,6 +26,16 @@ public class DeleteEntityController {
         return service.createDeleteEntity(newDeleteEntity);
     }
 
+    @DeleteMapping
+    public DeleteEntity deleteDeleteEntity(@RequestParam Map<String, Object> queryStrings, @RequestBody Map<String, Object> body){
+
+        Map<String, Object> newDeleteEntity = new HashMap<>();
+
+        newDeleteEntity.put("queryStrings", queryStrings);
+        newDeleteEntity.put("body", body);
+        return service.createDeleteEntity(newDeleteEntity);
+    }
+
     @GetMapping
     public List<DeleteEntity> getAllDeleteEntities (){
         return service.getAllDeleteEntities();

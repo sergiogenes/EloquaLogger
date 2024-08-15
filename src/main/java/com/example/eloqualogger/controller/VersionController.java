@@ -14,7 +14,7 @@ public class VersionController {
     @GetMapping
     public Map<String, Object> getVersion(){
         Map<String, Object> version = new HashMap<>();
-        version.put("version", "0.12 - Se agrega cabecera Authorization y token al pedido Put hacia Eloqua" );
+        version.put("version", "0.26 - Delete endpoint " );
         return  version;
     }
 

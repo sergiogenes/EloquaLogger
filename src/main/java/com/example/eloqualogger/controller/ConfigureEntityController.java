@@ -2,10 +2,13 @@ package com.example.eloqualogger.controller;
 
 import com.example.eloqualogger.model.ConfigureEntity;
 import com.example.eloqualogger.service.ConfigureEntityService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 
@@ -25,47 +28,61 @@ public class ConfigureEntityController {
     private ConfigureEntityService service;
 
     @PostMapping()
-    public ConfigureEntity createConfigureEntity(
+    public ResponseEntity<?> createConfigureEntity(
             @RequestParam Map<String, String> queryStrings,
             @RequestBody Map<String, Object> body) {
 
         Map<String, Object> newConfigureEntity = new HashMap<>();
         newConfigureEntity.put("body", body);
-        newConfigureEntity.put("queryStrings",  queryStrings);
+        newConfigureEntity.put("queryStrings", queryStrings);
 
+        String instanceId = queryStrings.get("instance_id");
 
-        // Extrae el id_instance del query string
-        String idInstance = queryStrings.get("id_instance");
-
-        // Construye el cuerpo de la solicitud PUT
+        // Se construye el cuerpo de la solicitud PUT
         Map<String, Object> putBody = new HashMap<>();
-        putBody.put("recordDefinition", Map.of(
-                "ContactID", "{{Contact.Id}}",
-                "EmailAddress", "{{Contact.Field(C_EmailAddress)}}"
-        ));
+
+        Map<String, String> recordDefinition = new HashMap<>();
+        recordDefinition.put("ContactID", "{{Contact.Id}}");
+        recordDefinition.put("EmailAddress", "{{Contact.Field(C_EmailAddress)}}");
+
+        putBody.put("recordDefinition", recordDefinition);
         putBody.put("height", 256);
         putBody.put("width", 256);
         putBody.put("editorImageUrl", "https://img04.en25.com/EloquaImages/clients/IngramMicroLATAM/%7B5f315c7b-a380-47af-95aa-140b9a43bd21%7D_32x32.png");
         putBody.put("requiresConfiguration", false);
 
-        // Configura los headers
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("Authorization", "Basic " + eloquaToken );
+        headers.set("Authorization", "Basic " + eloquaToken);
+        try {
+        String jsonBody = new ObjectMapper().writeValueAsString(putBody);
 
-        // Crea la entidad HTTP
-        HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(putBody, headers);
+        HttpEntity<String> requestEntity = new HttpEntity<>(jsonBody, headers);
 
-        // Define la URL de destino
-        String url = "https://secure.p04.eloqua.com/api/cloud/1.0/contents/instances/" + idInstance;
+        String url = "https://secure.p04.eloqua.com/api/cloud/1.0/contents/instances/" + instanceId;
 
-        // Realiza la solicitud PUT
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.exchange(url, HttpMethod.PUT, requestEntity, String.class);
 
-        // Devuelve la respuesta de la solicitud PUT
-        return service.createConfigureEntity(newConfigureEntity);
+            System.out.println("URL: " + url);
+            System.out.println("Serialized JSON Body: " + jsonBody);
+            System.out.println("Authorization Header: " + headers.get("Authorization"));
+
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.PUT, requestEntity, String.class);
+            System.out.println("Response: " + response.getBody());
+
+            return ResponseEntity.ok(service.createConfigureEntity(newConfigureEntity));
+
+        } catch (JsonProcessingException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error en la serialización del JSON: " + e.getMessage());
+
+        }catch (HttpClientErrorException e) {
+            return ResponseEntity.status(e.getStatusCode()).body("Error en la solicitud PUT: " + e.getMessage());
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocurrió un error inesperado: " + e.getMessage());
+        }
     }
+
 
     @GetMapping()
     @ResponseBody
