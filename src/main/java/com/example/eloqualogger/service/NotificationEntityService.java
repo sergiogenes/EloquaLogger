@@ -103,17 +103,51 @@ public class NotificationEntityService {
         StringBuilder dataBuilder = new StringBuilder("[");
 
         for (Map<String, Object> item : items) {
-            String emailAddress = (String) item.get("EmailAddress");
             String contactId = (String) item.get("ContactID");
-            String content = String.format("<tr><td>%s</td><td>%s</td></tr>", contactId, emailAddress);
 
-            dataBuilder.append(String.format(
-                    """
-                    {
-                        "EmailAddress": "%s",
-                        "Content": "%s"
-                    },
-                    """, emailAddress, content));
+            // Reemplazar :parentId con 186 y contactId con el valor del campo contactId
+            String url = String.format("https://secure.p04.eloqua.com/api/rest/2.0/data/customObject/186/instances?search=contactId='%s'", contactId);
+
+            // Realizar la solicitud GET
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Authorization", "Basic " + eloquaToken);
+
+            HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);
+
+            // Procesar la respuesta para obtener los valores necesarios
+            String responseBody = response.getBody();
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode rootNode;
+            try {
+                rootNode = objectMapper.readTree(responseBody);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException("Error al procesar la respuesta de Eloqua", e);
+            }
+
+            JsonNode elements = rootNode.get("elements");
+            if (elements != null && elements.isArray()) {
+                StringBuilder contentBuilder = new StringBuilder();
+
+                for (JsonNode element : elements) {
+                    String email = element.get("fieldValues").get(0).get("value").asText();
+                    String contrato = element.get("fieldValues").get(1).get("value").asText();
+                    String link = element.get("fieldValues").get(2).get("value").asText();
+
+                    contentBuilder.append(String.format("<tr><td>%s</td><td>%s</td><td>%s</td></tr>", contrato, email, link));
+                }
+
+                // Formar el objeto JSON con el email y el contenido generado
+                String emailAddress = (String) item.get("EmailAddress");
+                dataBuilder.append(String.format(
+                        """
+                        {
+                            "EmailAddress": "%s",
+                            "Content": "%s"
+                        },
+                        """, emailAddress, contentBuilder.toString()));
+            }
         }
 
         // Quitar la última coma y cerrar el array JSON
@@ -122,6 +156,7 @@ public class NotificationEntityService {
 
         return dataBuilder.toString();
     }
+
 
     private void postToEloqua(String importUri, String postDataBody) {
         String url = "https://secure.p04.eloqua.com/api/bulk/2.0" + importUri + "/data";

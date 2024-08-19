@@ -14,7 +14,7 @@ public class VersionController {
     @GetMapping
     public Map<String, Object> getVersion(){
         Map<String, Object> version = new HashMap<>();
-        version.put("version", "0.36 - Repuesta asincronica - Se agrega sincronización " );
+        version.put("version", "0.37 - Lectura de Custom Object " );
         return  version;
     }
 
